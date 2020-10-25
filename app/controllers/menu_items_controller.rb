@@ -29,7 +29,7 @@ class MenuItemsController < ActionController::API
 
     def create_menu_item_params
       params.require(:menu_item).permit(
-        :title, :description, :price
+        :title, :description, :price, :introduced_at, :is_expensive
       )
     end
 

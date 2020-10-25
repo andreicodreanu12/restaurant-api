@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_24_083813) do
+ActiveRecord::Schema.define(version: 2020_10_25_150848) do
 
   create_table "menu_items", force: :cascade do |t|
     t.string "title"
@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2020_10_24_083813) do
     t.float "price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "introduced_at"
+    t.boolean "is_expensive"
   end
 
 end
