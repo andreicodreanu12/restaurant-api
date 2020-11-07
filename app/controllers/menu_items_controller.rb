@@ -5,8 +5,8 @@ class MenuItemsController < ActionController::API
 
   def items
     items = MenuItem.all.except(:created_at, :updated_at)
-    ActionCable.server.broadcast "menu_channel", 'hey pisi'
-    render json: items
+    ActionCable.server.broadcast('menu_channel', event: 'index')
+    render json: items, each_serializer: MenuItemSerializer
   end
 
   def create
