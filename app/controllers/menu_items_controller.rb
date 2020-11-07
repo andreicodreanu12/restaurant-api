@@ -5,12 +5,19 @@ class MenuItemsController < ActionController::API
 
   def items
     items = MenuItem.all.except(:created_at, :updated_at)
+    ActionCable.server.broadcast "menu_channel", 'hey pisi'
     render json: items
   end
 
   def create
     menu_item = MenuItem.new(create_menu_item_params)
     if menu_item.save
+      ActionCable.server.broadcast('menu_channel',
+        event: 'created',
+        payload: {
+          item: menu_item
+        }
+      )
       head :ok
     else
       head :error
