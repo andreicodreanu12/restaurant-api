@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-class MenuItemsController < ActionController::API
+class MenuItemsController < ApplicationController
   before_action :load_item, only: %i[update destroy]
+  before_action :authorized
 
   def items
     items = MenuItem.all.except(:created_at, :updated_at)
