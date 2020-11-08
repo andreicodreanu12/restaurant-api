@@ -6,12 +6,19 @@ class MenuItemsController < ApplicationController
 
   def items
     items = MenuItem.all.except(:created_at, :updated_at)
-    render json: items
+    ActionCable.server.broadcast('menu_channel', event: 'index')
+    render json: items, each_serializer: MenuItemSerializer
   end
 
   def create
     menu_item = MenuItem.new(create_menu_item_params)
     if menu_item.save
+      ActionCable.server.broadcast('menu_channel',
+        event: 'created',
+        payload: {
+          item: menu_item
+        }
+      )
       head :ok
     else
       head :error
