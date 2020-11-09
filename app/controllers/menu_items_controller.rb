@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
-class MenuItemsController < ActionController::API
+class MenuItemsController < ApplicationController
   before_action :load_item, only: %i[update destroy]
+  before_action :authorized
 
   def items
-    items = MenuItem.all.except(:created_at, :updated_at)
-    ActionCable.server.broadcast('menu_channel', event: 'index')
+    items = MenuItem.all.where(user_id: @user.id)
+    ActionCable.server.broadcast('menu_channel', type: 'index')
     render json: items, each_serializer: MenuItemSerializer
   end
 
   def create
-    menu_item = MenuItem.new(create_menu_item_params)
+    menu_item = MenuItem.new(create_menu_item_params.merge(user_id: @user.id))
     if menu_item.save
       ActionCable.server.broadcast('menu_channel',
-        event: 'created',
-        payload: {
-          item: menu_item
-        }
+        type: 'created',
+        payload: menu_item
       )
       head :ok
     else
@@ -25,7 +24,11 @@ class MenuItemsController < ActionController::API
   end
 
   def update
-    @menu_item.update(create_menu_item_params)
+    @menu_item.update(create_menu_item_params.merge(user_id: @user.id))
+    ActionCable.server.broadcast('menu_channel',
+      type: 'updated',
+      payload: @menu_item
+    )
   end
 
   def destroy

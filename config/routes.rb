@@ -6,4 +6,8 @@ Rails.application.routes.draw do
   post '/item', to: 'menu_items#create'
   put '/item/:id', to: 'menu_items#update'
   delete '/item/:id', to: 'menu_items#destroy'
+
+  resources :users, only: [:create]
+  post '/login', to: 'users#login'
+  get '/auto_login', to: 'users#auto_login'
 end
