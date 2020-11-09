@@ -2,7 +2,6 @@ module ApplicationCable
   class Channel < ActionCable::Channel::Base
     def subscribed
       stream_for 'menu_item'
-      debugger
     end
 
     def unsubscribed
