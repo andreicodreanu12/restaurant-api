@@ -5,9 +5,13 @@ class MenuItemsController < ApplicationController
   before_action :authorized
 
   def items
-    items = MenuItem.all.where(user_id: @user.id)
+    @items = MenuItem.all.where(user_id: @user.id)
+
+    filter_items
+
     ActionCable.server.broadcast('menu_channel', type: 'index')
-    render json: items, each_serializer: MenuItemSerializer
+
+    render json: @items, each_serializer: MenuItemSerializer
   end
 
   def create
@@ -45,5 +49,13 @@ class MenuItemsController < ApplicationController
 
     def load_item
       @menu_item = MenuItem.find(params[:id])
+    end
+
+    def filter_items
+      if params[:filter].present? && params[:filter] != 'All'
+        @items = @items.where(description: params[:filter])
+      # elsif params[:index].present?
+      #   @items = @items
+      end
     end
 end
