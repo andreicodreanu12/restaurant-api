@@ -54,8 +54,11 @@ class MenuItemsController < ApplicationController
     def filter_items
       if params[:filter].present? && params[:filter] != 'All'
         @items = @items.where(description: params[:filter])
-      # elsif params[:index].present?
-      #   @items = @items
+      end
+      if params[:index].present?
+        sleep 1.5
+        index = params[:index].to_i
+        @items = @items[index * 20..index * 20 + 19]
       end
     end
 end
