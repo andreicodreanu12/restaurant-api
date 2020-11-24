@@ -9,8 +9,6 @@ class MenuItemsController < ApplicationController
 
     filter_items
 
-    ActionCable.server.broadcast('menu_channel', type: 'index')
-
     render json: @items, each_serializer: MenuItemSerializer
   end
 
@@ -33,6 +31,7 @@ class MenuItemsController < ApplicationController
       type: 'updated',
       payload: @menu_item
     )
+    @menu_item
   end
 
   def destroy
